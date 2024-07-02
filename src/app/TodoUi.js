@@ -172,7 +172,7 @@ export default function TodoUi() {
                   handleAddTodo();
                 }
               }}
-              className="h-8 w-48 rounded-md bg-muted/40 px-3 text-sm md:h-10 md:w-64 md:text-base"
+              className="h-8 !w-[22rem] rounded-md bg-muted/40 px-3 text-sm md:h-10 md:text-base"
             />
             <Button size="sm" className="h-8 md:h-10" onClick={handleAddTodo}>
               Add
@@ -184,11 +184,11 @@ export default function TodoUi() {
             {filteredTodos.map((todo) => (
               <li
                 key={todo.id}
-                className={`flex items-center justify-between rounded-md px-4 py-3 shadow-sm ${
+                className={`flex items-center gap-4 justify-between rounded-md px-4 py-3 shadow-sm ${
                   todo.completed ? "bg-muted/40" : "bg-muted/40"
                 }`}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 w-full">
                   <Checkbox
                     id={`todo-${todo.id}`}
                     checked={todo.completed}
@@ -208,7 +208,7 @@ export default function TodoUi() {
                     />
                   ) : (
                     <label
-                      htmlFor={`todo-${todo.id}`}
+                      // htmlFor={`todo-${todo.id}`}
                       className={`text-sm font-medium ${
                         todo.completed
                           ? "line-through text-muted-foreground"
