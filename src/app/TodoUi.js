@@ -4,8 +4,14 @@ import React, { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useToast } from "@/components/ui/use-toast";
-import { Toaster } from "@/components/ui/toaster";
+import toast, { Toaster } from "react-hot-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+} from "@/components/ui/dialog";
+import { DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 const TODOS_STORAGE_KEY = "todos";
 
@@ -14,11 +20,11 @@ const saveTodosToLocalStorage = (todos) => {
 };
 
 export default function TodoUi() {
-  const { toast } = useToast();
   const [todos, setTodos] = useState([]);
   const [filter, setFilter] = useState("all");
   const [editingTodoId, setEditingTodoId] = useState(null);
   const [newTodoTitle, setNewTodoTitle] = useState("");
+  const [isDeleteAllDialogOpen, setIsDeleteAllDialogOpen] = useState(false);
 
   useEffect(() => {
     const savedTodos =
@@ -30,17 +36,11 @@ export default function TodoUi() {
     navigator.clipboard
       .writeText(text)
       .then(() => {
-        toast({
-          variant: "default",
-          description: "Copied to clipboard",
-        });
+        toast.success("Copied to clipboard");
       })
       .catch((err) => {
         console.error("Failed to copy:", err);
-        toast({
-          variant: "destructive",
-          description: "Failed to copy to clipboard",
-        });
+        toast.error("Failed to copy to clipboard");
       });
   };
 
@@ -85,6 +85,26 @@ export default function TodoUi() {
     }
   };
 
+  const handleSelectAll = () => {
+    const updatedTodos = todos.map((todo) => ({
+      ...todo,
+      completed: true,
+    }));
+    setTodos(updatedTodos);
+    saveTodosToLocalStorage(updatedTodos);
+  };
+
+  const handleDeleteAll = () => {
+    setIsDeleteAllDialogOpen(true);
+  };
+
+  const confirmDeleteAll = () => {
+    const remainingTodos = todos.filter((todo) => !todo.completed);
+    setTodos(remainingTodos);
+    saveTodosToLocalStorage(remainingTodos);
+    setIsDeleteAllDialogOpen(false);
+  };
+
   const filteredTodos = useMemo(() => {
     switch (filter) {
       case "pending":
@@ -95,14 +115,6 @@ export default function TodoUi() {
         return todos;
     }
   }, [filter, todos]);
-
-  const formatDateString = (date) => {
-    const d = new Date(date);
-    const day = d.getDate().toString().padStart(2, "0");
-    const month = (d.getMonth() + 1).toString().padStart(2, "0");
-    const year = d.getFullYear();
-    return `${day}-${month}-${year}`;
-  };
 
   const getCompletedTodos = () => {
     return todos
@@ -118,10 +130,10 @@ export default function TodoUi() {
 
   return (
     <div className="flex min-h-screen w-full bg-background">
-      <Toaster />
+      <Toaster position="top-right" />
       <aside className="hidden w-64 border-r bg-muted/40 p-6 md:block">
         <h2 className="mb-4 text-lg font-semibold">Filters</h2>
-        <div className="space-y-2">
+        <div className="">
           <Button
             variant={filter === "all" ? "primary" : "outline"}
             onClick={() => setFilter("all")}
@@ -179,6 +191,27 @@ export default function TodoUi() {
             </Button>
           </div>
         </div>
+        <div className="flex justify-end items-center p-4 md:p-6 gap-2">
+          <Button variant="outline" onClick={handleSelectAll}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+          </Button>
+          <Button variant="destructive" onClick={handleDeleteAll}>
+            <TrashIcon />
+          </Button>
+        </div>
         <main className="flex-1 overflow-auto p-4 md:p-6">
           <ul className="space-y-2">
             {filteredTodos.map((todo) => (
@@ -208,7 +241,6 @@ export default function TodoUi() {
                     />
                   ) : (
                     <label
-                      // htmlFor={`todo-${todo.id}`}
                       className={`text-sm font-medium ${
                         todo.completed
                           ? "line-through text-muted-foreground"
@@ -264,6 +296,32 @@ export default function TodoUi() {
           </ul>
         </main>
       </div>
+
+      <Dialog
+        open={isDeleteAllDialogOpen}
+        onOpenChange={setIsDeleteAllDialogOpen}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete all selected todos? This action
+              cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="secondary"
+              onClick={() => setIsDeleteAllDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={confirmDeleteAll}>
+              Delete All
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
