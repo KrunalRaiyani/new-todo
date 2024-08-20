@@ -133,7 +133,7 @@ export default function TodoUi() {
       <Toaster position="top-right" />
       <aside className="hidden w-64 border-r bg-muted/40 p-6 md:block">
         <h2 className="mb-4 text-lg font-semibold">Filters</h2>
-        <div className="">
+        <div className="flex flex-col gap-2">
           <Button
             variant={filter === "all" ? "primary" : "outline"}
             onClick={() => setFilter("all")}
@@ -168,6 +168,36 @@ export default function TodoUi() {
           >
             Update
           </Button>
+
+          <h2 className="font-semibold text-xl opacity-0">Funcions</h2>
+
+          <Button
+            variant="outline"
+            onClick={handleSelectAll}
+            className={"w-full"}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={handleDeleteAll}
+            className={"w-full"}
+          >
+            <TrashIcon />
+          </Button>
         </div>
       </aside>
       <div className="flex flex-1 flex-col">
@@ -191,27 +221,7 @@ export default function TodoUi() {
             </Button>
           </div>
         </div>
-        <div className="flex justify-end items-center p-4 md:p-6 gap-2">
-          <Button variant="outline" onClick={handleSelectAll}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="size-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-              />
-            </svg>
-          </Button>
-          <Button variant="destructive" onClick={handleDeleteAll}>
-            <TrashIcon />
-          </Button>
-        </div>
+
         <main className="flex-1 overflow-auto p-4 md:p-6">
           <ul className="space-y-2">
             {filteredTodos.map((todo) => (
