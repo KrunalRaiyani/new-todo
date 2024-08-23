@@ -94,6 +94,15 @@ export default function TodoUi() {
     saveTodosToLocalStorage(updatedTodos);
   };
 
+  const handleUncheckAll = () => {
+    const updatedTodos = todos.map((todo) => ({
+      ...todo,
+      completed: false,
+    }));
+    setTodos(updatedTodos);
+    saveTodosToLocalStorage(updatedTodos);
+  };
+
   const handleDeleteAll = () => {
     setIsDeleteAllDialogOpen(true);
   };
@@ -139,8 +148,7 @@ export default function TodoUi() {
             onClick={() => setFilter("all")}
             className={`w-full justify-start ${
               filter === "all" ? "bg-[#272E3F] text-white" : ""
-            }`}
-          >
+            }`}>
             All
           </Button>
           <Button
@@ -148,8 +156,7 @@ export default function TodoUi() {
             onClick={() => setFilter("pending")}
             className={`w-full justify-start ${
               filter === "pending" ? "bg-[#272E3F] text-white" : ""
-            }`}
-          >
+            }`}>
             Pending
           </Button>
           <Button
@@ -157,15 +164,13 @@ export default function TodoUi() {
             onClick={() => setFilter("done")}
             className={`w-full justify-start ${
               filter === "done" ? "bg-[#272E3F] text-white" : ""
-            }`}
-          >
+            }`}>
             Done
           </Button>
           <Button
             variant="secondary"
             onClick={handleCopyUpdate1}
-            className="w-full justify-start border-2 border-[#272E3F]"
-          >
+            className="w-full justify-start border-2 border-[#272E3F]">
             Update
           </Button>
 
@@ -174,29 +179,20 @@ export default function TodoUi() {
           <Button
             variant="outline"
             onClick={handleSelectAll}
-            className={"w-full"}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="size-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-              />
-            </svg>
+            className={"w-full justify-start"}>
+            Cehck all
           </Button>
           <Button
-            variant="destructive"
+            variant="outline"
+            onClick={handleUncheckAll}
+            className={"w-full justify-start"}>
+            Uncheck all
+          </Button>
+          <Button
+            variant="outline"
             onClick={handleDeleteAll}
-            className={"w-full"}
-          >
-            <TrashIcon />
+            className={"w-full justify-start"}>
+            Delete all
           </Button>
         </div>
       </aside>
@@ -229,8 +225,7 @@ export default function TodoUi() {
                 key={todo.id}
                 className={`flex items-center gap-4 justify-between rounded-md px-4 py-3 shadow-sm ${
                   todo.completed ? "bg-muted/40" : "bg-muted/40"
-                }`}
-              >
+                }`}>
                 <div className="flex items-center gap-3 w-full">
                   <Checkbox
                     id={`todo-${todo.id}`}
@@ -255,8 +250,7 @@ export default function TodoUi() {
                         todo.completed
                           ? "line-through text-muted-foreground"
                           : ""
-                      }`}
-                    >
+                      }`}>
                       {todo.title}
                     </label>
                   )}
@@ -267,8 +261,7 @@ export default function TodoUi() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={handleSaveEditedTodo}
-                      >
+                        onClick={handleSaveEditedTodo}>
                         <CheckIcon />
                       </Button>
                       <Button
@@ -277,8 +270,7 @@ export default function TodoUi() {
                         onClick={() => {
                           setEditingTodoId(null);
                           setNewTodoTitle("");
-                        }}
-                      >
+                        }}>
                         <XIcon />
                       </Button>
                     </>
@@ -287,15 +279,13 @@ export default function TodoUi() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => handleEditTodo(todo.id)}
-                      >
+                        onClick={() => handleEditTodo(todo.id)}>
                         <FilePenIcon />
                       </Button>
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => handleDeleteTodo(todo.id)}
-                      >
+                        onClick={() => handleDeleteTodo(todo.id)}>
                         <TrashIcon />
                       </Button>
                     </>
@@ -309,8 +299,7 @@ export default function TodoUi() {
 
       <Dialog
         open={isDeleteAllDialogOpen}
-        onOpenChange={setIsDeleteAllDialogOpen}
-      >
+        onOpenChange={setIsDeleteAllDialogOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Confirm Deletion</DialogTitle>
@@ -322,8 +311,7 @@ export default function TodoUi() {
           <DialogFooter>
             <Button
               variant="secondary"
-              onClick={() => setIsDeleteAllDialogOpen(false)}
-            >
+              onClick={() => setIsDeleteAllDialogOpen(false)}>
               Cancel
             </Button>
             <Button variant="destructive" onClick={confirmDeleteAll}>
@@ -348,8 +336,7 @@ function CheckIcon(props) {
       stroke="currentColor"
       strokeWidth="2"
       strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+      strokeLinejoin="round">
       <path d="M20 6 9 17l-5-5" />
     </svg>
   );
@@ -363,8 +350,7 @@ function FilePenIcon() {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="size-6"
-    >
+      className="size-6">
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -382,8 +368,7 @@ function TrashIcon() {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="size-6"
-    >
+      className="size-6">
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -405,8 +390,7 @@ function XIcon(props) {
       stroke="currentColor"
       strokeWidth="2"
       strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+      strokeLinejoin="round">
       <path d="M18 6 6 18" />
       <path d="m6 6 12 12" />
     </svg>
